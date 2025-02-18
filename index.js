@@ -48,11 +48,11 @@ const showMain = () => {
   <div class="container">
       <div class="header">
         <h1>My Store</h1>
-        <div style='display:flex'>
-         <div onclick='showProducts()'>Home</div>
-          <div onclick='showOrders()'>Orders</div>
-          <div onclick="displayCart()">Cart:<span id="items"></span></div>
-          <div><button onclick='showLogin()'>Logout</button></div>
+        <div class='menu'>
+         <li onclick='showProducts()'>Home</li>
+          <li onclick='showOrders()'>Orders</li>
+          <li onclick="displayCart()">Cart:<span id="items"></span></li>
+          <li onclick='showLogin()'>Logout</li>
         </div>
       </div>
       <div class="productBlock">
@@ -96,10 +96,11 @@ const showCart = () => {
       })'>-</button>${cart[value.id]}<button onclick='increment(${
         value.id
       })'>+</button>-$${value.price * cart[value.id]}</li>
-      <button onclick='placeOrder()'>Place Order</button>
+     
         `;
     }
   });
+  str += `<button onclick='placeOrder()'>Place Order</button>`;
   divCart.innerHTML = str;
   let count = Object.keys(cart).length;
   items.innerHTML = count;
