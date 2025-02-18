@@ -1,7 +1,9 @@
 let products = [];
-const cart = {};
+let orders = [];
+let cart = {};
 let users = [];
 let user = {};
+let total = 0;
 const addToCart = (id) => {
   if (!cart[id]) cart[id] = 1;
   showCart();
@@ -17,11 +19,28 @@ const decrement = (id) => {
   showCart();
 };
 const showTotal = () => {
-  let total = products.reduce((sum, value) => {
+  total = products.reduce((sum, value) => {
     return sum + value.price * (cart[value.id] ? cart[value.id] : 0);
   }, 0);
 
   divTotal.innerHTML = `Order Value: $${total}`;
+};
+
+const showOrders = () => {
+  let str = "";
+  orders.map((value) => {
+    if (value.customer === user.email) {
+      str += `
+      <li>
+      ${value.customer}-
+      ${value.orderValue}-
+      ${Object.keys(items).length}-
+      ${value.status}-
+      </li>
+      `;
+    }
+  });
+  divProducts.innerHTML = str;
 };
 
 const showMain = () => {
@@ -30,6 +49,8 @@ const showMain = () => {
       <div class="header">
         <h1>My Store</h1>
         <div style='display:flex'>
+         <div onclick='showProducts()'>Home</div>
+          <div onclick='showOrders()'>Orders</div>
           <div onclick="displayCart()">Cart:<span id="items"></span></div>
           <div><button onclick='showLogin()'>Logout</button></div>
         </div>
@@ -51,6 +72,20 @@ const showMain = () => {
   showProducts();
 };
 
+const placeOrder = () => {
+  //create an object and push into orders array
+  const obj = {
+    customer: user.email,
+    items: cart,
+    orderValue: total,
+    status: "pending",
+  };
+  orders.push(obj);
+  cart = {};
+  showCart();
+  console.log(orders);
+};
+
 const showCart = () => {
   let str = "";
   products.map((value) => {
@@ -61,6 +96,7 @@ const showCart = () => {
       })'>-</button>${cart[value.id]}<button onclick='increment(${
         value.id
       })'>+</button>-$${value.price * cart[value.id]}</li>
+      <button onclick='placeOrder()'>Place Order</button>
         `;
     }
   });
@@ -100,7 +136,7 @@ function showForm() {
   <p><button onclick='addUser()'>Submit</button></p>
   <p>Already a member?<button onclick='showLogin()'>Login Here</button></p>
   `;
-  root.innerHTML = str + "</div>"
+  root.innerHTML = str + "</div>";
 }
 
 function chkUser() {
